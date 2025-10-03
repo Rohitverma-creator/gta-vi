@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { useGSAP } from "@gsap/react";
+import React, { useState, useEffect } from "react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
 
 function App() {
-  let [showContent, setShowContent] = useState(false);
-  useGSAP(() => {
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
     const tl = gsap.timeline();
 
     tl.to(".vi-mask-group", {
       rotate: 10,
       duration: 2,
-      ease: "Power4.easeInOut",
+      ease: "power4.inOut",
       transformOrigin: "50% 50%",
     }).to(".vi-mask-group", {
       scale: 10,
       duration: 2,
       delay: -1.8,
-      ease: "Expo.easeInOut",
+      ease: "expo.inOut",
       transformOrigin: "50% 50%",
       opacity: 0,
       onUpdate: function () {
@@ -28,73 +28,31 @@ function App() {
         }
       },
     });
-  });
+  }, []);
 
-  useGSAP(() => {
+  useEffect(() => {
     if (!showContent) return;
 
-    gsap.to(".main", {
-      scale: 1,
-      rotate: 0,
-      duration: 2,
-      delay: "-1",
-      ease: "Expo.easeInOut",
-    });
-
-    gsap.to(".sky", {
-      scale: 1.1,
-      rotate: 0,
-      duration: 2,
-      delay: "-.8",
-      ease: "Expo.easeInOut",
-    });
-
-    gsap.to(".bg", {
-      scale: 1.1,
-      rotate: 0,
-      duration: 2,
-      delay: "-.8",
-      ease: "Expo.easeInOut",
-    });
-
-    gsap.to(".character", {
-      scale: 1.4,
-      x: "-50%",
-      bottom: "-25%",
-      rotate: 0,
-      duration: 2,
-      delay: "-.8",
-      ease: "Expo.easeInOut",
-    });
-
-    gsap.to(".text", {
-      scale: 1,
-      rotate: 0,
-      duration: 2,
-      delay: "-.8",
-      ease: "Expo.easeInOut",
-    });
+    gsap.to(".main", { scale: 1, rotate: 0, duration: 2, delay: -1, ease: "expo.inOut" });
+    gsap.to(".sky", { scale: 1.1, rotate: 0, duration: 2, delay: -0.8, ease: "expo.inOut" });
+    gsap.to(".bg", { scale: 1.1, rotate: 0, duration: 2, delay: -0.8, ease: "expo.inOut" });
+    gsap.to(".character", { scale: 1.4, x: "-50%", bottom: "-25%", rotate: 0, duration: 2, delay: -0.8, ease: "expo.inOut" });
+    gsap.to(".text", { scale: 1, rotate: 0, duration: 2, delay: -0.8, ease: "expo.inOut" });
 
     const main = document.querySelector(".main");
-
     main?.addEventListener("mousemove", function (e) {
       const xMove = (e.clientX / window.innerWidth - 0.5) * 40;
-      gsap.to(".main .text", {
-        x: `${xMove * 0.4}%`,
-      });
-      gsap.to(".sky", {
-        x: xMove,
-      });
-      gsap.to(".bg", {
-        x: xMove * 1.7,
-      });
+      gsap.to(".main .text", { x: `${xMove * 0.4}%` });
+      gsap.to(".sky", { x: xMove });
+      gsap.to(".bg", { x: xMove * 1.7 });
     });
   }, [showContent]);
 
   return (
     <>
-      <div className="svg flex items-center justify-center fixed top-0 left-0 z-[100] w-full h-screen overflow-hidden bg-[#000]">
-        <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+      {/* Intro Mask */}
+      <div className="svg fixed top-0 left-0 w-full h-screen bg-black z-[100] flex items-center justify-center">
+        <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
           <defs>
             <mask id="viMask">
               <rect width="100%" height="100%" fill="black" />
@@ -122,91 +80,82 @@ function App() {
           />
         </svg>
       </div>
+
       {showContent && (
-        <div className="main w-full rotate-[-10deg] scale-[1.7]">
-          <div className="landing overflow-hidden relative w-full h-screen bg-black">
-            <div className="navbar absolute top-0 left-0 z-[10] w-full py-10 px-10">
-              <div className="logo flex gap-7">
-                <div className="lines flex flex-col gap-[5px]">
-                  <div className="line w-15 h-2 bg-white"></div>
-                  <div className="line w-8 h-2 bg-white"></div>
-                  <div className="line w-5 h-2 bg-white"></div>
-                </div>
-                <h3 className="text-4xl -mt-[8px] leading-none text-white">
-                  Rockstar
-                </h3>
+        <div className="main w-full h-full rotate-[-10deg] scale-[1.7]">
+          <div className="landing relative w-full h-screen overflow-hidden bg-black">
+            {/* Navbar */}
+            <div className="absolute top-5 left-5 z-10 flex items-center gap-5">
+              <div className="flex flex-col gap-1">
+                <div className="w-6 h-1 bg-white"></div>
+                <div className="w-4 h-1 bg-white"></div>
+                <div className="w-2 h-1 bg-white"></div>
               </div>
+              <h3 className="text-2xl sm:text-4xl text-white leading-none">Rockstar</h3>
             </div>
 
-            <div className="imagesdiv relative overflow-hidden w-full h-screen">
+            {/* Images */}
+            <div className="relative w-full h-screen">
               <img
-                className="absolute sky scale-[1.5] rotate-[-20deg] top-0 left-0 w-full h-full object-cover"
+                className="sky absolute top-0 left-0 w-full h-full object-cover scale-[1.5] rotate-[-20deg]"
                 src="./sky.png"
                 alt=""
               />
               <img
-                className="absolute scale-[1.8] rotate-[-3deg] bg top-0 left-0 w-full h-full object-cover"
+                className="bg absolute top-0 left-0 w-full h-full object-cover scale-[1.8] rotate-[-3deg]"
                 src="./bg.png"
                 alt=""
               />
-              <div className="text text-white flex flex-col gap-3 absolute top-20 left-1/2 -translate-x-1/2 scale-[1.4] rotate-[-10deg]">
-                <h1 className="text-[12rem] leading-none -ml-40">grand</h1>
-                <h1 className="text-[12rem] leading-none ml-20">theft</h1>
-                <h1 className="text-[12rem] leading-none -ml-40">auto</h1>
+
+              {/* Text */}
+              <div className="text absolute top-20 left-1/2 -translate-x-1/2 flex flex-col text-white gap-2 scale-[1.4] rotate-[-10deg]">
+                <h1 className="text-[12vw] leading-none">grand</h1>
+                <h1 className="text-[12vw] leading-none ml-10">theft</h1>
+                <h1 className="text-[12vw] leading-none -ml-10">auto</h1>
               </div>
+
+              {/* Character */}
               <img
-                className="absolute character -bottom-[150%] left-1/2 -translate-x-1/2  scale-[3] rotate-[-20deg]"
+                className="character absolute -bottom-[150%] left-1/2 -translate-x-1/2 scale-[3] rotate-[-20deg]"
                 src="./girlbg.png"
                 alt=""
               />
             </div>
-            <div className="btmbar text-white absolute bottom-0 left-0 w-full py-15 px-10 bg-gradient-to-t from-black to-transparent">
-              <div className="flex gap-4 items-center">
-                <i className="text-4xl ri-arrow-down-line"></i>
-                <h3 className="text-xl font-[Helvetica_Now_Display]">
-                  Scroll Down
-                </h3>
+
+            {/* Bottom Bar */}
+            <div className="absolute bottom-0 left-0 w-full py-6 px-6 flex justify-between items-center bg-gradient-to-t from-black to-transparent">
+              <div className="flex gap-2 items-center text-white">
+                <i className="ri-arrow-down-line text-2xl sm:text-4xl"></i>
+                <h3 className="text-sm sm:text-xl">Scroll Down</h3>
               </div>
-              <img
-                className="absolute h-[55px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                src="./ps5.png"
-                alt=""
-              />
+              <div className="flex justify-center flex-1">
+                <img className="h-8 sm:h-12 md:h-14" src="./ps5.png" alt="" />
+              </div>
             </div>
           </div>
-          <div className="w-full h-screen flex items-center justify-center bg-black">
-            <div className="cntnr flex text-white w-full h-[80%] ">
-              <div className="limg relative w-1/2 h-full">
-                <img
-                  className="absolute scale-[1.3] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                  src="./imag.png"
-                  alt=""
-                />
+
+          {/* Section 2 */}
+          <div className="w-full min-h-screen flex items-center justify-center bg-black px-6 py-10">
+            <div className="cntnr flex flex-col md:flex-row text-white gap-10 max-w-6xl w-full">
+              <div className="md:w-1/2 flex justify-center items-center">
+                <img className="w-full max-w-md scale-110" src="./imag.png" alt="" />
               </div>
-              <div className="rg w-[30%] py-30">
-                <h1 className="text-8xl">Still Running,</h1>
-                <h1 className="text-8xl">Not Hunting</h1>
-                <p className="mt-10 text-xl font-[Helvetica_Now_Display]">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Distinctio possimus, asperiores nam, omnis inventore nesciunt
-                  a architecto eveniet saepe, ducimus necessitatibus at
-                  voluptate.
+              <div className="md:w-1/2 flex flex-col justify-center">
+                <h1 className="text-4xl sm:text-6xl">Still Running,</h1>
+                <h1 className="text-4xl sm:text-6xl">Not Hunting</h1>
+                <p className="mt-5 text-base sm:text-lg">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Distinctio possimus, asperiores nam, omnis inventore nesciunt.
                 </p>
-                <p className="mt-3 text-xl font-[Helvetica_Now_Display]">
+                <p className="mt-3 text-base sm:text-lg">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                  eius illum fugit eligendi nesciunt quia similique velit
-                  excepturi soluta tenetur illo repellat consectetur laborum
-                  eveniet eaque, dicta, hic quisquam? Ex cupiditate ipsa nostrum
-                  autem sapiente.
+                  eius illum fugit eligendi nesciunt quia similique.
                 </p>
-                <p className="mt-10 text-xl font-[Helvetica_Now_Display]">
+                <p className="mt-3 text-base sm:text-lg">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                  eius illum fugit eligendi nesciunt quia similique velit
-                  excepturi soluta tenetur illo repellat consectetur laborum
-                  eveniet eaque, dicta, hic quisquam? Ex cupiditate ipsa nostrum
-                  autem sapiente.
+                  eius illum fugit eligendi nesciunt quia similique.
                 </p>
-                <button className="bg-yellow-500 px-10 py-10 text-black mt-10 text-4xl">
+                <button className="bg-yellow-500 px-6 py-3 mt-6 text-black text-xl sm:text-2xl">
                   Download Now
                 </button>
               </div>
